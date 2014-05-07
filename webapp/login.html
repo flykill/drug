@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" lang="zh-CN">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>药店管理系统</title>
+<link rel="stylesheet" type="text/css" href="css/base/global-noSidebar.css" />
+<link rel="stylesheet" type="text/css" href="css/base/basic.css" />
+<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="css/themes/icon.css" />
+<script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="js/easyui-lang-zh_CN.js"></script>
+<link rel="stylesheet" type="text/css" href="css/msgTips/msgTip.css" />
+<script type="text/javascript" src="js/msgTips/msgTip.js"></script>
+<script type="text/javascript">
+	jQuery().ready(function() {
+		//登录
+		$('#btn_login').click(function() {
+		   onSubmit();
+		});
+		$('#pwd').keydown(function(e){
+			if(e.keyCode==13){
+			 onSubmit();
+			}
+		});
+		//
+	     $("input").keypress(function (e) {
+	            var keyCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
+	            if (keyCode == 13){
+	            var i;
+	            for (i = 0; i < this.form.elements.length; i++)
+	            if (this == this.form.elements[i])
+	            break;
+	            i = (i + 1) % this.form.elements.length;
+	            this.form.elements[i].focus();
+	            return false;
+	            }
+	            else
+	            return true;
+	     });
+		$('#userCode').focus();
+	});
+function onSubmit(){
+	if(!$("#loginForm").form('validate')){
+		$.tips.error({msg :"请填写必填项!"});
+		return;
+	}
+	$.ajax({
+		  type:'POST',
+		  url: 'login/loginValidate.do',
+		  data: $('#loginForm').serialize(),
+		  success: function(data){
+			  var json = $.parseJSON(data);
+			  if(!json.success){
+				   $('#userCode').focus();
+				   $.tips.error({msg:json.message});
+				   return;
+			  }
+			 window.location = "index/query.do";
+		  }
+	});
+}
+	
+</script>
+</head>
+<body id="B-page" style="font-family:'Microsoft YaHei', 'Trebuchet MS', 'Lucida Grande', Arial, Sans-serif;">
+	<div id="B-body" class="clearfix">
+		<div id="B-content" style="padding-top:100px;width:450px;margin-left:auto;margin-right:auto;float:none;">
+			<div id="B-content-wrap" class="radius" style="min-height:160px;">
+				<!-- 主要内容 开始 -->
+				<div class="title-area sp">
+					<h1 class="f-yh">药店管理系统</h1>
+				</div>
+				<div class="form-area">
+				  <form id="loginForm">
+					<table class="form-mod"  style="margin-bottom:4px;">
+						<col width="60px" />
+						<col width="180px"/>
+						<tr>
+							<th>用户名 :</th>
+							<td><input type="text" id="userCode" name="userCode"
+								class="in-text easyui-validatebox" data-options="required:true" size="30" /></td>
+						</tr>
+						<tr>
+							<th>密码  :</th>
+							<td><input type="password" id="pwd" name="pwd"
+								class="in-text easyui-validatebox" data-options="required:true" size="30" />
+							</td>
+						</tr>
+ 					 </table>
+ 					 <div class="form-action" style="text-align:center;margin-bottom:4px;">
+					  	 <input type="button" id="btn_login" class="in-button s2 sp" value="登录" />
+						 <input type="reset" class="in-button s2 sp" value="重置" /> 
+					</div>
+					</form>
+		<!-- 主要内容 结束 -->
+			</div>
+		</div>
+		<!-- content -->
+	</div>
+	<!-- body -->
+</body>
+</html>

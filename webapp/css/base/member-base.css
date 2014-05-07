@@ -1,0 +1,17 @@
+@charset "UTF-8";
+#member-login-panel{
+    width:260px;
+    margin:30px auto 0;
+}
+#member-login-panel .bd{
+    padding:5px;
+}
+
+#member-login-panel .form-mod{
+    padding-left:20px;
+}
+
+
+#member-login-panel p.p-action{
+    padding-left:60px;
+}

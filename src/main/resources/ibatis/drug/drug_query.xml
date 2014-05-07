@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="drug">
+
+	<!-- 库存查询 -->
+	<select id="query_store_total" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		select count(0) from druginfo t,drugStore store where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugCode">
+			t.drugCode = #drugCode# and
+		</isNotEmpty>
+		<isNotEmpty property="factoryName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$factoryName$%') and
+		</isNotEmpty>
+		t.drugCode = store.drugCode
+		and t.factoryzjm = store.factoryzjm
+	</select>
+	<select id="query_store_page" parameterClass="java.util.Map"
+		resultClass="java.util.HashMap">
+		select p.* from ( select row_.*, rownum rownum_ from (
+		select t.*,
+		(select factoryName from drugFactory f where f.pyzjm = t.factoryzjm)
+		as "FACTORYNAME",
+		(SELECT TYPENAME FROM DRUGTYPE type where
+		type.typeCode = t.drugtypeid) as "DRUGTYPENAME",
+		store.drugNumber as
+		"DRUGNUMBER"
+		from drugInfo t,drugStore store where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugCode">
+			t.drugCode = #drugCode# and
+		</isNotEmpty>
+		<isNotEmpty property="factoryName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$factoryName$%') and
+		</isNotEmpty>
+		t.drugCode = store.drugCode
+		and t.factoryzjm = store.factoryzjm
+		order by t.id desc
+		) row_
+		where rownum
+		&lt;=
+		#query.pageLastItem# ) p
+		where
+		rownum_ &gt;=
+		#query.pageFirstItem#
+	</select>
+	<select id="query_store_numberTotal" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		select sum(store.drugnumber) from druginfo t,drugStore store where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugCode">
+			t.drugCode = #drugCode# and
+		</isNotEmpty>
+		<isNotEmpty property="factoryName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$factoryName$%') and
+		</isNotEmpty>
+		t.drugCode = store.drugCode
+		and t.factoryzjm = store.factoryzjm
+	</select>
+	<select id="query_store_priceTotal" parameterClass="java.util.Map"
+		resultClass="java.lang.Double">
+ 	select sum(store.drugnumber*t.lsprice) from druginfo t,drugStore store where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugCode">
+			t.drugCode = #drugCode# and
+		</isNotEmpty>
+		<isNotEmpty property="factoryName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$factoryName$%') and
+		</isNotEmpty>
+		t.drugCode = store.drugCode
+		and t.factoryzjm = store.factoryzjm
+	</select>
+	<!-- 入库查询 -->
+	<select id="query_rk_total" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		select count(0) from druginfo t,drugRK rk where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugPH">
+			rk.drugPH = #drugPH# and
+		</isNotEmpty>
+		<isNotEmpty property="beforeDate">
+			rk.operationDate
+			&gt;=to_date(#beforeDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="afterDate">
+			rk.operationDate
+			&lt;to_date(#afterDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="scName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$scName$%') and
+		</isNotEmpty>
+		<isNotEmpty property="gjName">
+			rk.gjFactoryName like '%$gjName$%' and
+		</isNotEmpty>
+		t.drugCode = rk.drugCode
+		and t.factoryzjm = rk.factoryzjm
+	</select>
+	<select id="query_rk_page" parameterClass="java.util.Map"
+		resultClass="java.util.HashMap">
+		select p.* from ( select row_.*, rownum rownum_ from (
+		select
+		t.drugName,rk.*
+		from druginfo t,drugRK rk where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugPH">
+			rk.drugPH = #drugPH# and
+		</isNotEmpty>
+		<isNotEmpty property="beforeDate">
+			rk.operationDate
+			&gt;=to_date(#beforeDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="afterDate">
+			rk.operationDate &lt;
+			to_date(#afterDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="scName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$scName$%') and
+		</isNotEmpty>
+		<isNotEmpty property="gjName">
+			rk.gjFactoryName like '%$gjName$%' and
+		</isNotEmpty>
+		t.drugCode = rk.drugCode
+		and t.factoryzjm = rk.factoryzjm
+		order by rk.operationDate desc
+		) row_
+		where rownum &lt;=
+		#query.pageLastItem#
+		) p
+		where
+		rownum_ &gt;=
+		#query.pageFirstItem#
+	</select>
+	<select id="query_rk_numberTotal" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		select sum(rk.drugnumber) from druginfo t,drugRK rk where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugPH">
+			rk.drugPH = #drugPH# and
+		</isNotEmpty>
+		<isNotEmpty property="beforeDate">
+			rk.operationDate
+			&gt;=to_date(#beforeDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="afterDate">
+			rk.operationDate
+			&lt;to_date(#afterDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="scName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$scName$%') and
+		</isNotEmpty>
+		<isNotEmpty property="gjName">
+			rk.gjFactoryName like '%$gjName$%' and
+		</isNotEmpty>
+		t.drugCode = rk.drugCode
+		and t.factoryzjm = rk.factoryzjm
+	</select>
+	<select id="query_rk_priceTotal" parameterClass="java.util.Map"
+		resultClass="java.lang.Double">
+		select sum(rk.drugnumber*rk.jhprice) from druginfo t,drugRK rk where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugPH">
+			rk.drugPH = #drugPH# and
+		</isNotEmpty>
+		<isNotEmpty property="beforeDate">
+			rk.operationDate
+			&gt;=to_date(#beforeDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="afterDate">
+			rk.operationDate
+			&lt;to_date(#afterDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="scName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$scName$%') and
+		</isNotEmpty>
+		<isNotEmpty property="gjName">
+			rk.gjFactoryName like '%$gjName$%' and
+		</isNotEmpty>
+		t.drugCode = rk.drugCode
+		and t.factoryzjm = rk.factoryzjm
+	</select>
+	<!-- 出库查询 -->
+	<select id="query_ck_total" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		select count(0) from druginfo t,drugCK01 ck01,drugck02 ck02 where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugCode">
+			t.drugCode = #drugCode# and
+		</isNotEmpty>
+		<isNotEmpty property="factoryName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$factoryName$%') and
+		</isNotEmpty>
+		<isNotEmpty property="drugType">
+			t.drugTypeId=#drugType# and
+		</isNotEmpty>
+		<isNotEmpty property="beforeDate">
+			ck01.operationDate
+			&gt;=to_date(#beforeDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="afterDate">
+			ck01.operationDate
+			&lt;to_date(#afterDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		t.drugCode = ck02.drugCode and
+		t.factoryzjm = ck02.factoryzjm and
+		ck02.ckid = ck01.id
+	</select>
+	<select id="query_ck_page" parameterClass="java.util.Map"
+		resultClass="java.util.HashMap">
+		select p.* from ( select row_.*, rownum rownum_ from (
+		select
+		t.*,ck01.ckType,ck01.operationDate,ck02.xsPrice,ck02.xsNumber,
+		(select
+		factoryName from drugFactory f where f.pyzjm = t.factoryzjm) as
+		"FACTORYNAME",
+		(SELECT TYPENAME FROM DRUGTYPE type where type.typeCode
+		= t.drugtypeid) as "DRUGTYPENAME"
+		from druginfo t,drugCK01
+		ck01,drugck02 ck02 where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugCode">
+			t.drugCode = #drugCode# and
+		</isNotEmpty>
+		<isNotEmpty property="factoryName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$factoryName$%') and
+		</isNotEmpty>
+		<isNotEmpty property="drugType">
+			t.drugTypeId=#drugType# and
+		</isNotEmpty>
+		<isNotEmpty property="beforeDate">
+			ck01.operationDate
+			&gt;=to_date(#beforeDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="afterDate">
+			ck01.operationDate
+			&lt;to_date(#afterDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		t.drugCode = ck02.drugCode and
+		t.factoryzjm = ck02.factoryzjm and
+		ck02.ckid = ck01.id
+		order by ck01.operationDate desc
+		) row_
+		where rownum
+		&lt;=
+		#query.pageLastItem# ) p
+		where
+		rownum_ &gt;=
+		#query.pageFirstItem#
+	</select>
+	<select id="query_ck_numberTotal" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		select sum(ck02.xsnumber)  from druginfo t,drugCK01 ck01,drugck02 ck02 where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugCode">
+			t.drugCode = #drugCode# and
+		</isNotEmpty>
+		<isNotEmpty property="factoryName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$factoryName$%') and
+		</isNotEmpty>
+		<isNotEmpty property="drugType">
+			t.drugTypeId=#drugType# and
+		</isNotEmpty>
+		<isNotEmpty property="beforeDate">
+			ck01.operationDate
+			&gt;=to_date(#beforeDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="afterDate">
+			ck01.operationDate
+			&lt;to_date(#afterDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		t.drugCode = ck02.drugCode and
+		t.factoryzjm = ck02.factoryzjm and
+		ck02.ckid = ck01.id
+	</select>
+		<select id="query_ck_priceTotal" parameterClass="java.util.Map"
+		resultClass="java.lang.Double">
+		select sum(ck02.xsnumber*ck02.xsprice) from druginfo t,drugCK01 ck01,drugck02 ck02 where
+		<isNotEmpty property="drugName">
+			t.drugName like '%$drugName$%' and
+		</isNotEmpty>
+		<isNotEmpty property="drugCode">
+			t.drugCode = #drugCode# and
+		</isNotEmpty>
+		<isNotEmpty property="factoryName">
+			t.factoryzjm in (select pyzjm from
+			drugFactory f where f.factoryName like
+			'%$factoryName$%') and
+		</isNotEmpty>
+		<isNotEmpty property="drugType">
+			t.drugTypeId=#drugType# and
+		</isNotEmpty>
+		<isNotEmpty property="beforeDate">
+			ck01.operationDate
+			&gt;=to_date(#beforeDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		<isNotEmpty property="afterDate">
+			ck01.operationDate
+			&lt;to_date(#afterDate#,'yyyy-MM-dd hh24:mi:ss') and
+		</isNotEmpty>
+		t.drugCode = ck02.drugCode and
+		t.factoryzjm = ck02.factoryzjm and
+		ck02.ckid = ck01.id
+	</select>
+</sqlMap>

@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+.tip-ok{
+	background:url("../themes/icons/ok.png") no-repeat;
+	height:18px;
+	width:16px;
+	vertical-align:middle;
+	display:inline-block;
+	margin-left:10px;
+}
+.tip-folder{
+	background:url("../themes/icons/tree_folder.gif") no-repeat;
+	height:18px;
+	width:16px;
+	vertical-align:middle;
+	display:inline-block;
+	margin-left:20px;
+}
+.tip-close{
+	background-image:url("../../image/msgTips/mclose.png");
+	background-repeat:no-repeat;
+	display:inline-block;
+	width:8px;
+	height:8px;
+	margin-top:4px;
+	float:right;
+	cursor:pointer
+}

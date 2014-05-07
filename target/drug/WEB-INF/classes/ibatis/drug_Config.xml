@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+	<properties resource="ibatis/db.properties" />
+
+	<settings cacheModelsEnabled="true" enhancementEnabled="true"
+		lazyLoadingEnabled="true" errorTracingEnabled="true" maxRequests="32"
+		maxSessions="10" maxTransactions="5" useStatementNamespaces="true" />
+
+	<typeHandler javaType="java.lang.Object"
+		callback="com.drug.ibatis.OracleObjectTypeHandler" />
+
+
+	<transactionManager type="JDBC" commitRequired="false">
+		<dataSource type="DBCP">
+			<property name="JDBC.Driver" value="${DRUG.JDBC.Driver}" />
+			<property name="JDBC.ConnectionURL" value="${DRUG.JDBC.ConnectionURL}" />
+			<property name="JDBC.Username" value="${DRUG.JDBC.Username}" />
+			<property name="JDBC.Password" value="${DRUG.JDBC.Password}" />
+			<property name="Pool.MaximumActiveConnections" value="100" /> <!-- 连接池维持的最大容量 -->
+			<property name="Pool.MaximumIdleConnections" value="20" />  <!-- 连接池允许挂起的最大连接 -->
+			<property name="Pool.MaximumWait" value="20000" />       <!-- 线程允许等待的最大时间 -->
+		</dataSource>
+	</transactionManager>
+
+	<sqlMap resource="ibatis/${DRUG.SQL_PATH}/drug_common.xml" />  <!-- 公用信息 -->
+	<sqlMap resource="ibatis/${DRUG.SQL_PATH}/drug_base.xml" /> <!-- 基本信息维护 -->
+	<sqlMap resource="ibatis/${DRUG.SQL_PATH}/drug_rk.xml" /> <!-- 入库管理 -->
+	<sqlMap resource="ibatis/${DRUG.SQL_PATH}/drug_ck.xml" /> <!-- 出库管理 -->
+	<sqlMap resource="ibatis/${DRUG.SQL_PATH}/drug_query.xml" />  <!-- 查询管理 -->
+	<sqlMap resource="ibatis/${DRUG.SQL_PATH}/drug_privilege.xml" /> <!-- 权限 -->
+
+
+</sqlMapConfig>

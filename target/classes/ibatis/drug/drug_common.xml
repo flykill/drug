@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="drug">
+	<!-- 查询药品通过id -->
+	<select id="query_drug_code" parameterClass="java.lang.String"
+		resultClass="java.util.HashMap">
+		select t.drugname as "drugName",
+		(select factoryName from drugFactory f where f.pyzjm = t.factoryzjm) as "factoryName",
+		(select typeName from drugType type where type.typecode = t.drugtypeid) as "drugTypeName",
+		(select drugNumber from drugStore store where t.drugCode = store.drugCode and store.factoryzjm = t.factoryzjm) as "drugNumber",
+		t.drugcode as "drugCode",
+		t.drugwh as "drugWH",
+		t.drugrule as "drugRule",
+		t.drugjx as "drugJX",
+		t.drugunit as "drugUnit",
+		t.memberprice as "memberPrice",
+		t.lsprice as "lsPrice",
+		t.cf as "isCF",
+		t.drugtypeid as "drugType"
+		from drugInfo t
+		where drugCode = #drugCode#
+	</select>
+	
+		<!-- 查询所有药品-->
+	<select id="query_drug" parameterClass="java.util.Map"  resultClass="java.util.HashMap">
+		select t.drugname as "drugName",
+		(select factoryName from drugFactory f where f.pyzjm = t.factoryzjm) as "factoryName",
+		(select typeName from drugType type where type.typecode = t.drugtypeid) as "drugTypeName",
+		(select drugNumber from drugStore store where t.drugCode = store.drugCode and store.factoryzjm = t.factoryzjm) as "drugNumber",
+	 	t.pyzjm as "drugzjm",
+		t.drugcode as "drugCode",
+		t.drugwh as "drugWH",
+		t.drugrule as "drugRule",
+		t.drugjx as "drugJX",
+		t.drugunit as "drugUnit",
+		t.memberprice as "memberPrice",
+		t.lsprice as "lsPrice",
+		t.cf as "isCF",
+		t.drugtypeid as "drugType"
+		from drugInfo t
+		where t.pyzjm like '%$q$%'
+		and rownum &lt;=#limit#
+	</select>
+	
+
+	<!-- 查询药品分类 -->
+	<select id="query_drugType" resultClass="java.util.HashMap">
+		select typeCode AS
+		"key",typeName as "value" from drugType
+	</select>
+	<!-- 库存 -->
+	<select id="query_drugStore" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		select drugNumber from drugStore where drugCode=#drugCode# and factoryZJM = #factoryId#
+	</select>
+	<insert id="insert_drugStore" parameterClass="java.util.Map">
+		insert into
+		drugstore(
+		drugNumber,
+		drugCode,
+		factoryZJM
+		) values(
+		#drugNumber#,
+		#drugCode#,
+		#factoryId#
+		)
+	</insert>
+	<update id="update_drugStore_rk" parameterClass="java.util.Map">
+		update drugStore
+		set drugnumber = drugnumber+#drugNumber# where drugCode=#drugCode# and factoryZJM = #factoryId#
+	</update>
+	
+	<update id="update_drugStore_ck" parameterClass="java.util.Map">
+		update drugStore
+		set drugnumber = drugnumber-#xsNumber# where drugCode=#drugCode# and factoryZJM =#factoryId#
+	</update>
+	
+
+</sqlMap>

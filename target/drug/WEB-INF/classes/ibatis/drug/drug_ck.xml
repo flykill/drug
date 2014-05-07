@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="drug">
+	
+	<!-- 获取seq -->
+	<select id="query_ck_seq" resultClass="java.lang.Integer">
+	    select  drug_seq.nextval from dual
+	</select>
+	<!-- 保存药品 -->
+	<insert id="insert_ck01" parameterClass="java.util.Map">
+		insert into drugck01 (
+		ID,
+		OPERATIONDATE,
+		CKPRICE,
+		CKTYPE
+		) values(
+		#ckId#,
+		sysdate,
+		#totalPrice#,
+		#ckType#
+		)
+	</insert>
+	<insert id="insert_ck02" parameterClass="java.util.Map">
+		insert into drugck02 (
+		CKID,
+		DRUGCODE,
+		XSPRICE,
+		XSNUMBER,
+		factoryZJM
+		) values(
+		#ckId#,
+		#drugCode#,
+		#xsPrice#,
+		#xsNumber#,
+		#factoryId#
+		)
+	</insert>
+</sqlMap>

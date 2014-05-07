@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="drug">
+	<!-- 权限 -->
+	<!-- 查询菜单树 -->
+	<select id="query_menuFile" resultClass="java.util.HashMap">
+		select * from sys_menu t
+		where t.menutype='1' order by t.sort
+	</select>
+	<select id="query_menuTree" resultClass="java.util.HashMap">
+		select * from sys_menu t
+		where t.menutype='2' order by t.sort
+	</select>
+
+	<insert id="insert_rule" parameterClass="java.util.Map">
+		insert into
+		sys_role(roleName,roleDescription,menuIds,menuNames)
+		values(#roleName#,#roleDescription#,#menuIds#,#menuNames#)
+	</insert>
+	<!-- 修改药品 -->
+	<update id="update_role" parameterClass="java.util.Map">
+		update sys_role set
+		<isNotEmpty property="roleName">
+			roleName = #roleName#,
+		</isNotEmpty>
+		<isNotNull property="roleDescription">
+			roleDescription=#roleDescription#,
+		</isNotNull>
+		<isNotEmpty property="menuIds">
+			menuIds=#menuIds#,
+		</isNotEmpty>
+		<isNotEmpty property="menuNames">
+			menuNames =#menuNames#,
+		</isNotEmpty>
+		id=#id#
+		where id = #id#
+	</update>
+	<!-- 删除药品 -->
+	<delete id="delete_role" parameterClass="java.lang.String">
+		delete from sys_role t
+		where t.id=#id#
+	</delete>
+
+	<!-- 查询药品总数 -->
+	<select id="query_role_total" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		select count(0) from sys_role t where
+		<isNotEmpty property="roleName">
+			t.roleName like '%$roleName$%' and
+		</isNotEmpty>
+		1=1
+	</select>
+	<select id="query_role_page" parameterClass="java.util.Map"
+		resultClass="java.util.HashMap">
+		select p.* from ( select row_.*, rownum rownum_ from (
+		select * from
+		sys_role t where
+		<isNotEmpty property="roleName">
+			t.roleName like '%$roleName$%' and
+		</isNotEmpty>
+		1=1 order by t.id desc
+		) row_
+		where rownum &lt;=
+		#query.pageLastItem# ) p
+		where rownum_ &gt;=
+		#query.pageFirstItem#
+	</select>
+	<select id="query_role_id" parameterClass="java.lang.String"
+		resultClass="java.util.HashMap">
+		SELECT * FROM sys_role WHERE ID=#id#
+	</select>
+	<select id="query_role_combox" resultClass="java.util.HashMap">
+		SELECT t.rolename as
+		"text",t.id as "id" FROM SYS_ROLE t
+	</select>
+	<insert id="insert_person" parameterClass="java.util.Map">
+		insert into
+		sys_person(usercode,pwd,username,roleIds,rolenames,effective,createDate,updateDate)
+		values(#userCode#,#pwd#,#userName#,#roleIds#,#roleNames#,#effective#,sysdate,sysdate)
+	</insert>
+	<!-- 修改药品 -->
+	<update id="update_person" parameterClass="java.util.Map">
+		update sys_person set
+		<isNotEmpty property="userCode">
+			userCode = #userCode#,
+		</isNotEmpty>
+		<isNotEmpty property="pwd">
+			pwd=#pwd#,
+		</isNotEmpty>
+		<isNotEmpty property="userName">
+			userName =#userName#,
+		</isNotEmpty>
+		<isNotEmpty property="roleIds">
+			roleIds =#roleIds#,
+		</isNotEmpty>
+		<isNotEmpty property="roleNames">
+			roleNames =#roleNames#,
+		</isNotEmpty>
+		<isNotEmpty property="effective">
+			effective =#effective#,
+		</isNotEmpty>
+		updateDate = sysdate
+		where id = #id#
+	</update>
+
+	<select id="query_person_total" parameterClass="java.util.Map"
+		resultClass="java.lang.Integer">
+		select count(0) from sys_person t where
+		<isNotEmpty property="userName">
+			t.userName like '%$userName$%' and
+		</isNotEmpty>
+		1=1
+	</select>
+	<select id="query_person_page" parameterClass="java.util.Map"
+		resultClass="java.util.HashMap">
+		select p.* from ( select row_.*, rownum rownum_ from (
+		select * from
+		sys_person t where
+		<isNotEmpty property="userName">
+			t.userName like '%$userName$%' and
+		</isNotEmpty>
+		1=1 order by t.id desc
+		) row_
+		where rownum &lt;=
+		#query.pageLastItem# ) p
+		where rownum_ &gt;=
+		#query.pageFirstItem#
+	</select>
+	<delete id="delete_person" parameterClass="java.lang.String">
+		delete from sys_person
+		t
+		where t.id=#id#
+	</delete>
+	<select id="query_person_id" parameterClass="java.lang.String"
+		resultClass="java.util.HashMap">
+		SELECT t.usercode as "userCode",
+		t.userName as "userName",
+		t.pwd as "pwd",
+		t.roleids as "roleId",
+		t.effective as "effective"
+		FROM sys_person t WHERE t.id=#id#
+	</select>
+	<select id="query_person_userCode" parameterClass="java.lang.String"
+		resultClass="java.util.HashMap">
+		SELECT * FROM SYS_PERSON WHERE USERCODE =#userCode#
+	</select>
+	<select id="query_menus_id" parameterClass="java.lang.String"
+		resultClass="java.lang.String">
+		select menuids from sys_role r where r.id= #roleId#
+	</select>
+
+</sqlMap>

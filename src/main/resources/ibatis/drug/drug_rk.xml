@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="drug">
+	
+	<!-- 保存药品 -->
+	<insert id="insert_rk" parameterClass="java.util.Map">
+		insert into drugrk (
+		operationDate,
+		drugCode,
+		drugPH,
+		drugValidity,
+		jhPrice,
+		drugNumber,
+		gjFactoryName,
+		gjFactoryZjm,
+		factoryName,
+		factoryZJM,
+		rkType
+		) values(
+		sysdate,
+		#drugCode#,
+		#drugPH#,
+		to_date(#drugValidity#,'yyyy-MM-dd'),
+		#JHPrice#,
+		#drugNumber#,
+		#gjFactoryName#,
+		#gjFactoryId#,
+		#factoryName_hidden#,
+		#factoryId#,
+		#rkType#
+		)
+	</insert>
+	
+</sqlMap>

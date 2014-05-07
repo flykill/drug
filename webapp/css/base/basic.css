@@ -1,0 +1,169 @@
+@charset "UTF-8";
+
+/* Index
+----------------------------------------------------------
+[01] Tag Reset
+[02] Font Style
+[03] Layout Framework
+[04] Common Style
+------------------------------------------------------- */
+
+/* [01] Tag Reset
+------------------------------------------------------- */
+html {
+    color:#404040;
+}
+body,div,span,object,iframe,
+dl,dt,dd,ul,ol,li,
+h1,h2,h3,h4,h5,h6,p,img,
+a,address,sub,sup,strong,
+form,fieldset,legend,label,button,input,textarea,
+table,caption,tbody,tfoot,thead,tr,th,td {
+    margin:0;
+    padding:0;
+}
+ul,ol {
+    list-style:none;
+}
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+}
+body,
+button,input,select,textarea {
+    font:12px/1.5 tahoma,arial,\5b8b\4f53,sans-serif;  /* "\5b8b\4f53\" is "simsun" */
+}
+address,caption,th,optgroup {
+    font-style:normal;
+    font-weight:normal;
+}
+h1,h2,h3,h4,h5,h6,
+button,input,select,textarea {
+    font-size:100%;
+	font-weight:normal;
+}
+button,input,textarea,
+select,optgroup,option {
+	font-family:inherit;
+	font-size:inherit;
+	font-style:inherit;
+	font-weight:inherit;
+}
+pre,cod,kbd,samp,tt {
+    font-size:100%;
+    font-family:courier new,courier,monospace;
+}
+fieldset,img {
+    border:0;
+}
+:link,:visited {
+    text-decoration:none;
+}
+a:link,a:visited {
+    color:#1C5083;
+}
+a:hover {
+    color:#f60;
+    text-decoration:underline;
+}
+
+/* [02] Font Styel
+------------------------------------------------------- */
+.f-type-yh {
+    font-family:microsoft yahei;
+}
+.f-type-num {
+    font-family:arial,sans-serif;
+}
+.f-size-14 {
+    font-size:14px;
+}
+.f-size-12 {
+    font-size:12px;
+}
+.f-style-b {
+    font-weight:bold;
+}
+.f-color-darkred {
+    color:#7c134b;
+}
+.f-color-claret {
+    color:#d41c7b;
+}
+.f-color-gray {
+    color:#999;
+}
+
+a:link.f-link-blue {
+    color:#454593;
+    text-decoration:underline;
+}
+a:visited.f-link-blue {
+    color:#404040;
+    text-decoration:underline;
+}
+a:hover.f-link-blue {
+    color:#d41c7b;
+    text-decoration:underline;
+}
+
+a:link.f-link-gray {
+    color:#666;
+}
+a:visited.f-link-gray {
+    color:#404040;
+}
+a:hover.f-link-gray {
+    color:#ad427a;
+    text-decoration:underline;
+}
+
+a:link.f-link-claret {
+    color:#ad427a;
+}
+a:visited.f-link-claret {
+    color:#404040;
+}
+a:hover.f-link-claret {
+    color:#d41c7b;
+    text-decoration:underline;
+}
+
+/* [03] Layout Framework
+------------------------------------------------------- */
+.layout-general {
+    margin:0 auto;
+    width:960px;
+}
+.layout-main {
+    width:760px;
+}
+.layout-side {
+    width:190px;
+}
+
+/* [04] Common Style
+------------------------------------------------------- */
+.float-l {
+    float:left;
+}
+.float-r {
+    float:right;
+}
+.hidden {
+    display:none;
+}
+.clear {
+    clear:both;
+}
+
+.clearfix:after {
+    content:"\0020"; /* "." has some errors in gb2312 */
+    display:block;
+    height:0;
+    clear:both;
+    visibility:hidden;
+}
+.clearfix {
+    zoom:1;
+}
